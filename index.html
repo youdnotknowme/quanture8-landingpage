@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>quanture8 — KI-Agenten die dein Unternehmen kennen</title>
+<meta name="description" content="Maßgeschneiderte KI-Agenten für Unternehmen. Kein generisches Tool — ein Advisor, der dein Business, deine Branche und deine Prozesse kennt.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F5F0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  color-scheme: light;
+  --bg: #F7F5F0;
+  --bg-card: #FFFFFF;
+  --ink: #0E1520;
+  --ink-soft: #4A5568;
+  --ink-muted: #9AA5B4;
+  --accent: #C9440A;
+  --accent-light: #FFF0E8;
+  --accent-dark: #8B2F06;
+  --navy: #1A3A5C;
+  --navy-light: #EBF2FA;
+  --border: #E4DED4;
+  --border-strong: #C4BAB0;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-stat: 'Bebas Neue', Impact, sans-serif;
+  --radius: 6px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(14,21,32,0.08), 0 4px 16px rgba(14,21,32,0.06);
+  --shadow-lg: 0 8px 40px rgba(14,21,32,0.12);
+  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-body); cursor: pointer; border: none; background: none; }
+
+.t-display { font-family: var(--font-display); font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance; }
+.t-stat { font-family: var(--font-stat); line-height: 1; letter-spacing: 0.02em; }
+.t-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 96px 0; }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ─── Navigation ──────────────────────────────────── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(247,245,240,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow var(--transition);
+}
+.nav--scrolled { box-shadow: 0 2px 20px rgba(14,21,32,0.1); }
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+}
+.nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-style: italic; }
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 32px; }
+.nav-links a { font-size: 0.875rem; font-weight: 500; color: var(--ink-soft); transition: color var(--transition); }
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  padding: 10px 20px; border-radius: var(--radius);
+  font-size: 0.875rem; font-weight: 600;
+  transition: background var(--transition), transform var(--transition);
+}
+.nav-cta:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.nav-hamburger { display: none; flex-direction: column; gap: 5px; padding: 8px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+/* ─── Hero ─────────────────────────────────────────── */
+.hero { padding: 80px 0 96px; }
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 72px; align-items: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-light); color: var(--accent);
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+.hero-headline { font-size: clamp(2.2rem, 4vw, 3.3rem); margin-bottom: 20px; }
+.hero-headline em { font-style: italic; color: var(--accent); }
+.hero-sub { font-size: 1.05rem; color: var(--ink-soft); line-height: 1.75; max-width: 460px; margin-bottom: 36px; }
+.hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--accent); color: #fff;
+  padding: 14px 28px; border-radius: var(--radius);
+  font-size: 0.95rem; font-weight: 600;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 20px rgba(201,68,10,0.3);
+}
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,68,10,0.4); }
+.btn-text {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--ink-soft); font-size: 0.9rem; font-weight: 500;
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+.btn-text:hover { color: var(--accent); }
+
+/* ─── Chat Mockup ────────────────────────────────── */
+.hero-visual { display: flex; flex-direction: column; }
+.chat-mockup {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.chat-header {
+  background: linear-gradient(135deg, #0C1E35 0%, #1A3A5C 55%, #1D5080 100%);
+  padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+}
+.chat-header-dots { display: flex; gap: 6px; }
+.chat-header-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+.chat-header-dot.live { background: #4CAF50; animation: pulse-dot 2s ease-in-out infinite; }
+.chat-header-info { margin-left: 4px; }
+.chat-header-title { color: rgba(255,255,255,0.9); font-size: 0.82rem; font-weight: 700; }
+.chat-header-sub { color: rgba(255,255,255,0.35); font-size: 0.7rem; }
+
+.chat-messages { padding: 20px; display: flex; flex-direction: column; gap: 12px; height: 300px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; scroll-behavior: smooth; }
+.chat-messages::-webkit-scrollbar { display: none; }
+.chat-msg { display: flex; gap: 10px; align-items: flex-start; opacity: 0; transform: translateY(8px); }
+.chat-msg.show { animation: msg-in 0.28s ease forwards; }
+@keyframes msg-in { to { opacity: 1; transform: none; } }
+@keyframes anim-in-kf { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.anim-in { animation: anim-in-kf 0.35s ease both; }
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.03em;
+}
+.chat-avatar.agent { background: var(--navy); color: #fff; }
+.chat-avatar.user { background: var(--accent); color: #fff; }
+.chat-bubble {
+  background: #F0EDE8; border-radius: var(--radius-lg);
+  padding: 10px 14px; font-size: 0.85rem; line-height: 1.55;
+  max-width: 270px; color: var(--ink);
+}
+.chat-msg.user .chat-bubble { background: var(--accent-light); }
+.chat-status-line { font-size: 0.72rem; color: var(--accent); font-weight: 700; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+.chat-status-line::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.chat-sources { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+.chat-source-pill {
+  background: var(--navy-light); color: var(--navy);
+  padding: 2px 9px; border-radius: 100px;
+  font-size: 0.68rem; font-weight: 700;
+}
+.chat-insights { display: flex; flex-direction: column; gap: 5px; margin: 8px 0 6px; }
+.chat-insight { font-size: 0.79rem; line-height: 1.4; padding: 6px 10px 6px 12px; border-radius: 5px; border-left: 2px solid transparent; min-height: 2.4rem; box-sizing: border-box; }
+.chat-insight.up { background: rgba(34,197,94,0.1); border-left-color: rgba(34,197,94,0.55); }
+.chat-insight.warn { background: rgba(251,191,36,0.1); border-left-color: rgba(251,191,36,0.55); }
+.chat-insight.cta { background: rgba(201,68,10,0.13); border-left-color: var(--accent); font-weight: 500; }
+.gen-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.gen-card-label { font-size: 0.6rem; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+.gen-matrix-wrap { position: relative; width: 100%; height: 88px; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; background: rgba(255,255,255,0.02); }
+.gen-matrix-wrap::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed rgba(255,255,255,0.08); pointer-events: none; }
+.gen-matrix-wrap::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.08); pointer-events: none; }
+.gen-plot { position: absolute; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 800; transform: translate(-50%, -50%); }
+.gen-axes { display: flex; justify-content: space-between; margin-top: 5px; }
+.gen-axis-lbl { font-size: 0.58rem; color: rgba(255,255,255,0.2); letter-spacing: 0.05em; text-transform: uppercase; }
+.gen-legend { display: flex; gap: 10px; margin-top: 8px; }
+.gen-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.62rem; color: rgba(255,255,255,0.35); }
+.gen-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sketch-compare { display: grid; grid-template-columns: 1fr 22px 1fr; gap: 8px; align-items: center; margin: 10px 0; }
+.sketch-label { font-size: 0.58rem; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+.sketch-room { position: relative; border: 1.5px solid rgba(255,255,255,0.12); border-radius: 3px; background: rgba(255,255,255,0.02); height: 82px; overflow: hidden; }
+.sketch-item { position: absolute; border: 1px solid; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 0.43rem; font-weight: 700; text-align: center; line-height: 1.2; }
+.sketch-arrow { color: rgba(255,255,255,0.18); font-size: 1rem; text-align: center; }
+.chat-typing { display: flex; gap: 4px; align-items: center; padding: 2px 0; }
+.chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-muted); animation: typing 1.2s ease-in-out infinite; }
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+.hero-badge {
+  margin-top: 10px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  display: flex; overflow: hidden;
+}
+.hero-badge-item { flex: 1; display: flex; align-items: center; gap: 10px; padding: 13px 16px; }
+.hero-badge-item + .hero-badge-item { border-left: 1px solid var(--border); }
+.hero-badge-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1; }
+.hero-badge-text strong { display: block; font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+.hero-badge-text span { color: var(--ink-soft); font-size: 0.7rem; white-space: nowrap; }
+
+/* ─── Problem (dark) ─────────────────────────────── */
+.problem { background: var(--ink); color: #fff; padding: 96px 0; }
+.problem-headline { font-size: clamp(2rem, 3.5vw, 2.8rem); color: #fff; margin-bottom: 16px; }
+.problem-headline em { font-style: italic; color: rgba(201,68,10,0.75); }
+.problem-sub { color: rgba(255,255,255,0.55); font-size: 1.05rem; max-width: 560px; margin-bottom: 56px; }
+
+.vs-table-wrap {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.vs-head {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.vs-head-feat { padding: 20px 24px; }
+.vs-head-gpt { padding: 20px 24px; text-align: center; border-left: 1px solid rgba(255,255,255,0.07); }
+.vs-head-q8 {
+  padding: 20px 24px; text-align: center;
+  border-left: 1px solid rgba(201,68,10,0.25);
+  background: rgba(201,68,10,0.12);
+  border-top: 3px solid var(--accent);
+}
+.vs-col-badge {
+  display: inline-block; padding: 2px 9px; border-radius: 100px;
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  background: var(--accent); color: #fff; margin-bottom: 8px;
+}
+.vs-col-label { font-size: 0.875rem; font-weight: 700; }
+.vs-head-gpt .vs-col-label { color: rgba(255,255,255,0.38); }
+.vs-head-q8 .vs-col-label { color: var(--accent); }
+.vs-col-sub { font-size: 0.7rem; margin-top: 3px; }
+.vs-head-gpt .vs-col-sub { color: rgba(255,255,255,0.18); }
+.vs-head-q8 .vs-col-sub { color: rgba(201,68,10,0.55); }
+.vs-row {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.15s;
+}
+.vs-row:hover { background: rgba(255,255,255,0.02); }
+.vs-feat {
+  padding: 18px 24px; font-size: 0.875rem;
+  color: rgba(255,255,255,0.62); display: flex; align-items: center; gap: 11px;
+}
+.vs-feat-icon {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+}
+.vs-gpt-val {
+  padding: 18px 24px; border-left: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; text-align: center;
+}
+.vs-q8-val {
+  padding: 18px 24px; border-left: 1px solid rgba(201,68,10,0.18);
+  background: rgba(201,68,10,0.08);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; text-align: center;
+}
+.vs-x {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: rgba(255,255,255,0.22); font-weight: 900;
+}
+.vs-ok {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(201,68,10,0.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--accent); font-weight: 900;
+}
+.vs-val { font-size: 0.78rem; line-height: 1.3; }
+.vs-gpt-val .vs-val { color: rgba(255,255,255,0.26); }
+.vs-q8-val .vs-val { color: rgba(255,255,255,0.78); }
+.comp-tagline {
+  margin-top: 52px; text-align: center;
+  font-family: var(--font-display); font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-style: italic; color: rgba(255,255,255,0.5);
+}
+.comp-tagline strong { color: #fff; font-style: normal; }
+
+/* ─── How it works Pipeline ──────────────────────── */
+.how-headline { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px; }
+.how-sub { color: var(--ink-soft); font-size: 1rem; max-width: 500px; margin-bottom: 64px; }
+.how-pipeline { display: grid; grid-template-columns: 1fr 44px 1fr 44px 1fr; align-items: start; }
+.how-arrow {
+  display: flex; align-items: center; justify-content: center;
+  padding-top: 75px; color: var(--border-strong);
+}
+.how-layer { border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+.how-layer.featured { border-color: var(--navy); }
+.layer-visual {
+  min-height: 148px; padding: 14px 16px;
+  display: flex; flex-wrap: wrap; gap: 7px; align-content: center;
+  background: #ECEAE3; border-bottom: 1px solid var(--border);
+}
+.how-layer.featured .layer-visual {
+  background: rgba(20,50,82,0.97);
+  border-bottom-color: rgba(255,255,255,0.07);
+  flex-direction: column; gap: 10px; align-content: flex-start; flex-wrap: nowrap;
+}
+.layer-body { padding: 22px 22px; background: var(--bg-card); }
+.how-layer.featured .layer-body { background: var(--navy); }
+.layer-num { font-family: var(--font-stat); font-size: 2.2rem; color: var(--border-strong); line-height: 1; margin-bottom: 8px; }
+.how-layer.featured .layer-num { color: rgba(255,255,255,0.18); }
+.layer-title { font-size: 1rem; font-weight: 700; margin-bottom: 7px; }
+.how-layer.featured .layer-title { color: #fff; }
+.layer-desc { font-size: 0.82rem; color: var(--ink-soft); line-height: 1.6; }
+.how-layer.featured .layer-desc { color: rgba(255,255,255,0.6); }
+.ctx-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 100px; font-size: 0.69rem; font-weight: 600; white-space: nowrap;
+  background: rgba(26,58,92,0.1); color: var(--navy); border: 1px solid rgba(26,58,92,0.14);
+}
+.news-item { display: flex; gap: 8px; align-items: flex-start; width: 100%; flex-shrink: 0; }
+.news-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.news-body { flex: 1; min-width: 0; }
+.news-text { font-size: 0.69rem; color: rgba(255,255,255,0.78); line-height: 1.35; }
+.news-meta { font-size: 0.62rem; color: rgba(255,255,255,0.28); margin-top: 2px; }
+.out-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+}
+.out-chip.briefing { background: var(--accent-light); color: var(--accent); }
+.out-chip.chat { background: var(--navy-light); color: var(--navy); }
+.out-chip.alert { background: #FFF7E6; color: #B45309; }
+.out-chip.report { background: #F0F4FF; color: #3B5998; }
+
+/* ─── Use Cases ──────────────────────────────────── */
+.usecases { background: var(--navy-light); }
+.usecases-headline { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px; }
+.usecases-sub { color: var(--ink-soft); max-width: 500px; margin-bottom: 40px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+.tab-btn {
+  padding: 9px 20px; border-radius: 100px;
+  font-size: 0.85rem; font-weight: 600;
+  border: 1.5px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
+  transition: all var(--transition);
+}
+.tab-btn:hover { border-color: var(--navy); color: var(--navy); }
+.tab-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.tab-pane { display: none; }
+.tab-pane.active { display: grid; grid-template-columns: 3fr 2fr; gap: 40px; align-items: start; }
+.tab-demo {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.tab-demo-header {
+  background: #F0EDE8; border-bottom: 1px solid var(--border);
+  padding: 14px 18px; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-demo-header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s ease-in-out infinite; }
+.tab-question-wrap { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+.tab-q-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 8px; }
+.tab-question { font-family: var(--font-display); font-style: italic; font-size: 1.1rem; color: var(--ink); }
+.tab-answer-wrap { background: var(--navy); padding: 18px 20px; }
+.tab-a-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.tab-answer-text { font-size: 0.875rem; line-height: 1.65; color: rgba(255,255,255,0.85); }
+.tab-answer-meta { margin-top: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 6px; }
+.tab-right { padding: 8px 0; }
+.tab-right .t-label { margin-bottom: 12px; display: block; }
+.tab-right h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+.tab-right p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.65; }
+
+/* ─── Trust ──────────────────────────────────────── */
+.trust-headline { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px; }
+.trust-sub { color: var(--ink-soft); max-width: 500px; margin-bottom: 56px; }
+.trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.trust-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 28px 22px; border: 1px solid var(--border);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.trust-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.trust-card-icon {
+  width: 42px; height: 42px; border-radius: var(--radius);
+  background: var(--accent-light); display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; margin-bottom: 16px;
+}
+.trust-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+.trust-card p { font-size: 0.84rem; color: var(--ink-soft); line-height: 1.6; }
+
+/* ─── Packages ───────────────────────────────────── */
+.packages-header { max-width: 580px; margin-bottom: 56px; }
+.packages-header h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 12px; }
+.packages-header p { color: var(--ink-soft); }
+.packages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.pkg-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); padding: 32px;
+  display: flex; flex-direction: column;
+  transition: box-shadow var(--transition);
+}
+.pkg-card:hover { box-shadow: var(--shadow-lg); }
+.pkg-card.featured { background: var(--navy); border-color: var(--navy); }
+.pkg-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 100px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  margin-bottom: 24px; align-self: flex-start;
+}
+.pkg-card .pkg-badge { background: var(--accent-light); color: var(--accent); }
+.pkg-card.featured .pkg-badge { background: var(--accent); color: #fff; }
+.pkg-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.pkg-card.featured .pkg-name { color: #fff; }
+.pkg-desc { font-size: 0.875rem; color: var(--ink-soft); margin-bottom: 28px; line-height: 1.6; flex: 0; }
+.pkg-card.featured .pkg-desc { color: rgba(255,255,255,0.6); }
+.pkg-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; flex: 1; }
+.pkg-feature { display: flex; gap: 10px; align-items: flex-start; font-size: 0.875rem; line-height: 1.4; }
+.pkg-check { color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.pkg-card.featured .pkg-feature { color: rgba(255,255,255,0.85); }
+.pkg-card.featured .pkg-check { color: #FF8C5A; }
+.pkg-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border-radius: var(--radius); font-size: 0.875rem; font-weight: 600;
+  border: 1.5px solid var(--border-strong); color: var(--ink);
+  transition: all var(--transition); width: 100%;
+}
+.pkg-cta:hover { border-color: var(--accent); color: var(--accent); }
+.pkg-card.featured .pkg-cta { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pkg-card.featured .pkg-cta:hover { background: var(--accent-dark); }
+.packages-footnote {
+  text-align: center; margin-top: 32px;
+  font-size: 0.82rem; color: var(--ink-muted);
+}
+
+/* ─── Stats ──────────────────────────────────────── */
+.stats { background: var(--accent); padding: 80px 0; }
+.stats-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
+.stat-num { font-family: var(--font-stat); font-size: clamp(3.5rem, 6vw, 5.5rem); line-height: 1; color: #fff; margin-bottom: 10px; }
+.stat-label strong { display: block; color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+.stat-label span { color: rgba(255,255,255,0.72); font-size: 0.875rem; }
+
+/* ─── Final CTA ──────────────────────────────────── */
+.final-cta { padding: 100px 0; text-align: center; }
+.final-cta h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 16px; }
+.final-cta h2 em { font-style: italic; color: var(--accent); }
+.final-cta p { color: var(--ink-soft); font-size: 1.05rem; max-width: 460px; margin: 0 auto 40px; line-height: 1.7; }
+.final-cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.final-mail { color: var(--ink-muted); font-size: 0.85rem; }
+.final-mail a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; transition: color var(--transition); }
+.final-mail a:hover { color: var(--accent); }
+
+/* ─── Footer ─────────────────────────────────────── */
+footer { border-top: 1px solid var(--border); padding: 28px 0; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; }
+.footer-logo { font-family: var(--font-display); font-style: italic; font-size: 1rem; }
+.footer-logo span { color: var(--accent); }
+.footer-links { display: flex; gap: 24px; font-size: 0.8rem; color: var(--ink-muted); }
+.footer-links a:hover { color: var(--ink); }
+.footer-copy { font-size: 0.8rem; color: var(--ink-muted); }
+
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-visual { order: -1; }
+  .hero-badge { display: none; }
+  .hero-sub { max-width: 100%; }
+  .vs-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .vs-head, .vs-row { min-width: 460px; }
+  .how-pipeline { grid-template-columns: 1fr; }
+  .how-arrow { padding-top: 0; transform: rotate(90deg); margin: 4px 0; }
+  .trust-grid { grid-template-columns: 1fr 1fr; }
+  .packages-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: 1fr; gap: 32px; }
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+}
+@media (max-width: 640px) {
+  .section { padding: 64px 0; }
+  .hero { padding: 56px 0 72px; }
+  .tab-pane.active { grid-template-columns: 1fr; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .tabs { gap: 6px; }
+  .tab-btn { padding: 8px 14px; font-size: 0.8rem; }
+
+  /* ── Vergleichstabelle: gestacktes Layout statt horizontales Scroll ── */
+  .vs-table-wrap { overflow-x: visible; }
+  .vs-head { display: none; }
+  .vs-head, .vs-row { min-width: 0; }
+  .vs-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .vs-feat {
+    grid-column: 1 / -1;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.82rem;
+  }
+  .vs-gpt-val {
+    grid-column: 1;
+    border-left: none;
+    padding: 12px 14px 14px;
+  }
+  .vs-gpt-val::before {
+    content: 'Standard-KI';
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.22);
+    margin-bottom: 7px;
+  }
+  .vs-q8-val {
+    grid-column: 2;
+    padding: 12px 14px 14px;
+  }
+  .vs-q8-val::before {
+    content: 'quanture8';
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(201,68,10,0.55);
+    margin-bottom: 7px;
+  }
+  .vs-val { font-size: 0.72rem; line-height: 1.4; }
+  .vs-x, .vs-ok { width: 22px; height: 22px; font-size: 0.65rem; margin-bottom: 5px; }
+}
+
+/* ─── Hamburger Animation ────────────────────────── */
+.nav-hamburger span { transition: transform 0.22s ease, opacity 0.22s ease; }
+@media (max-width: 900px) {
+  .nav--open .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 64px; left: 0; right: 0;
+    background: rgba(247,245,240,0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px 20px;
+    gap: 0;
+    box-shadow: 0 8px 24px rgba(14,21,32,0.1);
+  }
+  .nav--open .nav-links a {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .nav--open .nav-links a:last-child { border-bottom: none; }
+  .nav--open .nav-hamburger span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .nav--open .nav-hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav--open .nav-hamburger span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+}
+
+/* ─── Contact Form ───────────────────────────────── */
+.form-section { background: var(--bg); }
+.form-wrap {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+.form-headline { font-size: clamp(1.8rem, 3vw, 2.8rem); margin-bottom: 16px; }
+.form-headline em { font-style: italic; color: var(--accent); }
+.form-lead { color: var(--ink-soft); font-size: 1rem; line-height: 1.75; margin-bottom: 28px; }
+.form-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.form-bullets li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.875rem; color: var(--ink-soft);
+}
+.form-bullets li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+.contact-form {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 36px;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 18px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; color: var(--ink); }
+.form-label-opt { color: var(--ink-muted); font-weight: 400; }
+.form-input {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 11px 14px;
+  font-family: var(--font-body); font-size: 0.9rem; color: var(--ink);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none; width: 100%;
+}
+.form-input::placeholder { color: var(--ink-muted); }
+.form-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,58,92,0.1); }
+.form-textarea { resize: vertical; min-height: 96px; }
+.form-submit { width: 100%; justify-content: center; font-size: 1rem; padding: 14px 28px; }
+.form-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
+.form-hint { font-size: 0.75rem; color: var(--ink-muted); text-align: center; margin-top: -6px; }
+.form-success {
+  display: none; flex-direction: column; align-items: flex-start; gap: 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 36px;
+  box-shadow: var(--shadow);
+}
+.form-success-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(34,197,94,0.12); color: #22C55E;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 700;
+}
+.form-success h3 { font-size: 1.2rem; font-weight: 700; }
+.form-success p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.65; }
+@media (max-width: 900px) {
+  .form-wrap { grid-template-columns: 1fr; gap: 48px; }
+  .form-row { grid-template-columns: 1fr; }
+  .contact-form { padding: 28px 22px; }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">quanture<span>8</span></a>
+    <div class="nav-links">
+      <a href="#how">Wie es funktioniert</a>
+      <a href="#problem">Warum kein Standard-Tool</a>
+      <a href="#pakete">Pakete</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <a href="mailto:hello@quanture8.de" class="nav-cta">Kostenloses Gespräch</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── Hero ─────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-eyebrow reveal">
+          <span class="hero-eyebrow-dot"></span>
+          KI-Agenten für ambitionierte Unternehmen
+        </div>
+        <h1 class="t-display hero-headline reveal reveal-delay-1">
+          Du kennst dein Business.<br>Dein Agent arbeitet<br><em>täglich dafür.</em>
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          Wir bauen KI-Agenten, die dein Unternehmen kennen — und täglich das liefern, was kein Standard-Tool kann.
+        </p>
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="mailto:hello@quanture8.de" class="btn-primary">
+            Gespräch vereinbaren
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#how" class="btn-text">
+            Wie es funktioniert
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10m-5-5 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="chat-mockup">
+          <div class="chat-header">
+            <div class="chat-header-dots">
+              <div class="chat-header-dot live"></div>
+              <div class="chat-header-dot"></div>
+              <div class="chat-header-dot"></div>
+            </div>
+            <div class="chat-header-info" style="margin-left:12px">
+              <div class="chat-header-title">quanture8 Agent</div>
+              <div class="chat-header-sub">Live · Echtzeit-Daten aktiv</div>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
+        </div>
+        <div class="hero-badge">
+          <div class="hero-badge-item">
+            <div class="hero-badge-icon">⚡</div>
+            <div class="hero-badge-text">
+              <strong>Ø 8 Sek.</strong>
+              <span>bis zur Antwort</span>
+            </div>
+          </div>
+          <div class="hero-badge-item">
+            <div class="hero-badge-icon">📚</div>
+            <div class="hero-badge-text">
+              <strong>Quellen zitiert</strong>
+              <span>bei jeder Antwort</span>
+            </div>
+          </div>
+          <div class="hero-badge-item">
+            <div class="hero-badge-icon">🔄</div>
+            <div class="hero-badge-text">
+              <strong>Immer aktuell</strong>
+              <span>Echtzeit-Daten</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Problem ──────────────────────────────────── -->
+<section class="problem" id="problem">
+  <div class="container">
+    <p class="t-label reveal" style="color:rgba(255,255,255,0.35);margin-bottom:14px">Das Problem mit KI-Tools</p>
+    <h2 class="t-display problem-headline reveal reveal-delay-1">Standard-KI ist gut.<br>Aber sie kennt <em>dich nicht.</em></h2>
+    <p class="problem-sub reveal reveal-delay-2">Standard-Tools antworten. Dein quanture8-Agent denkt mit — und kennt dein Unternehmen von Tag 1 an.</p>
+
+    <div class="vs-table-wrap reveal reveal-delay-1">
+      <div class="vs-head">
+        <div class="vs-head-feat"></div>
+        <div class="vs-head-gpt">
+          <div class="vs-col-label">Standard-KI-Tools</div>
+          <div class="vs-col-sub">Generisch, reaktiv</div>
+        </div>
+        <div class="vs-head-q8">
+          <div class="vs-col-badge">Empfohlen</div>
+          <div class="vs-col-label">quanture8-Agent</div>
+          <div class="vs-col-sub">Dein Advisor</div>
+        </div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-feat">
+          <div class="vs-feat-icon">🏢</div>
+          Kennt dein Unternehmen
+        </div>
+        <div class="vs-gpt-val"><div class="vs-x">✗</div><div class="vs-val">Nur mit langem Prompt</div></div>
+        <div class="vs-q8-val"><div class="vs-ok">✓</div><div class="vs-val">Tief eingebettet, immer aktuell</div></div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-feat">
+          <div class="vs-feat-icon">⚡</div>
+          Aktuelle Infos & Daten
+        </div>
+        <div class="vs-gpt-val"><div class="vs-x">✗</div><div class="vs-val">Veraltet, halluziniert</div></div>
+        <div class="vs-q8-val"><div class="vs-ok">✓</div><div class="vs-val">Live-Daten täglich aus verifizierten Quellen</div></div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-feat">
+          <div class="vs-feat-icon">🔔</div>
+          Proaktiv
+        </div>
+        <div class="vs-gpt-val"><div class="vs-x">✗</div><div class="vs-val">Nur auf Nachfrage</div></div>
+        <div class="vs-q8-val"><div class="vs-ok">✓</div><div class="vs-val">Tägliche Briefings & Alerts</div></div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-feat">
+          <div class="vs-feat-icon">🛠</div>
+          Setup & Pflege
+        </div>
+        <div class="vs-gpt-val"><div class="vs-x">✗</div><div class="vs-val">Du bist Prompt-Ingenieur</div></div>
+        <div class="vs-q8-val"><div class="vs-ok">✓</div><div class="vs-val">Wir bauen, pflegen, verbessern</div></div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-feat">
+          <div class="vs-feat-icon">🔑</div>
+          Eigentum & Kontrolle
+        </div>
+        <div class="vs-gpt-val"><div class="vs-x">✗</div><div class="vs-val">Abhängig vom Anbieter</div></div>
+        <div class="vs-q8-val"><div class="vs-ok">✓</div><div class="vs-val">Nach Setup gehört der Agent dir</div></div>
+      </div>
+    </div>
+
+    <p class="comp-tagline reveal">
+      <strong>"Ein Standard-Tool ist ein Werkzeug.</strong> Dein quanture8-Agent ist ein Mitarbeiter."
+    </p>
+  </div>
+</section>
+
+<!-- ─── How it works ─────────────────────────────── -->
+<section class="section" id="how">
+  <div class="container">
+    <p class="t-label reveal" style="margin-bottom:14px">Wie es funktioniert</p>
+    <h2 class="t-display how-headline reveal reveal-delay-1">Drei Schichten.<br>Ein System das täglich für dich arbeitet.</h2>
+    <p class="how-sub reveal reveal-delay-2">Kein einmaliges Setup, das nach Wochen veraltet ist. Ein System, das mit deinem Unternehmen wächst.</p>
+
+    <div class="how-pipeline">
+      <div class="how-layer reveal reveal-delay-1">
+        <div class="layer-visual">
+          <span class="ctx-chip">📋 Leistungen</span>
+          <span class="ctx-chip">👥 Zielgruppe</span>
+          <span class="ctx-chip">🗣 Tonalität</span>
+          <span class="ctx-chip">🎯 Kernthemen</span>
+          <span class="ctx-chip">⚔ Wettbewerber</span>
+          <span class="ctx-chip">📍 Markt</span>
+          <span class="ctx-chip">💬 Sprache</span>
+        </div>
+        <div class="layer-body">
+          <div class="layer-num">01</div>
+          <h3 class="layer-title">Unternehmenskontext</h3>
+          <p class="layer-desc">Wir geben dem Agenten ein vollständiges Bild deines Unternehmens. Quartalsweise aufgefrischt — immer aktuell.</p>
+        </div>
+      </div>
+
+      <div class="how-arrow">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-5 5 5-5-5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="how-layer featured reveal reveal-delay-2">
+        <div class="layer-visual">
+          <div class="news-item">
+            <div class="news-dot" style="background:var(--accent)"></div>
+            <div class="news-body">
+              <div class="news-text">BAFA erhöht Wärmepumpen-Förderung auf 70%</div>
+              <div class="news-meta">bafa.de · vor 4h</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-dot" style="background:rgba(255,255,255,0.3)"></div>
+            <div class="news-body">
+              <div class="news-text">Wettbewerber senkt Preise im Premiumsegment</div>
+              <div class="news-meta">linkedin.com · vor 1 Tag</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-dot" style="background:rgba(255,255,255,0.3)"></div>
+            <div class="news-body">
+              <div class="news-text">Neue EU-Richtlinie: Auswirkungen auf Reporting</div>
+              <div class="news-meta">eur-lex.eu · vor 2 Tagen</div>
+            </div>
+          </div>
+        </div>
+        <div class="layer-body">
+          <div class="layer-num">02</div>
+          <h3 class="layer-title">Echtzeit-Intelligenz</h3>
+          <p class="layer-desc">Täglich sucht der Agent was für dich relevant ist: Branchennews, Regulatorik, Preise, Wettbewerber — aus verifizierten Quellen.</p>
+        </div>
+      </div>
+
+      <div class="how-arrow">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-5 5 5-5-5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="how-layer reveal reveal-delay-3">
+        <div class="layer-visual" style="gap:8px">
+          <span class="out-chip briefing">📬 Wochenbriefing</span>
+          <span class="out-chip chat">💬 Agent-Chat</span>
+          <span class="out-chip alert">🔔 Regulatorik-Alert</span>
+          <span class="out-chip report">📊 Strategiebericht</span>
+        </div>
+        <div class="layer-body">
+          <div class="layer-num">03</div>
+          <h3 class="layer-title">Proaktive Outputs</h3>
+          <p class="layer-desc">Wöchentliche Briefings, Sofort-Chat, Alerts wenn sich etwas verändert. Du bestimmst das Tempo — der Agent liefert.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Use Cases ────────────────────────────────── -->
+<section class="section usecases" id="usecases">
+  <div class="container">
+    <p class="t-label reveal" style="margin-bottom:14px">In der Praxis</p>
+    <h2 class="t-display usecases-headline reveal reveal-delay-1">Was dein Agent<br>täglich macht.</h2>
+    <p class="usecases-sub reveal reveal-delay-2">Fünf Situationen aus dem Alltag — und wie dein Agent sie für dich löst.</p>
+
+    <div class="tabs reveal reveal-delay-1">
+      <button class="tab-btn active" data-tab="regulatorik">Regulatorik</button>
+      <button class="tab-btn" data-tab="angebote">Dokumente</button>
+      <button class="tab-btn" data-tab="wettbewerb">Wettbewerb</button>
+      <button class="tab-btn" data-tab="briefing">Wochenbriefing</button>
+      <button class="tab-btn" data-tab="bilder">Bilder & Skizzen</button>
+    </div>
+
+    <div class="tab-pane active" data-tab="regulatorik">
+      <div class="tab-demo reveal">
+        <div class="tab-demo-header">Live-Demo · Regulatorik-Monitoring</div>
+        <div class="tab-question-wrap">
+          <div class="tab-q-label">Deine Frage</div>
+          <div class="tab-question">"Was hat sich diese Woche bei BAFA geändert — und was bedeutet das für mein Geschäft?"</div>
+        </div>
+        <div class="tab-answer-wrap">
+          <div class="tab-a-label">Agent-Antwort</div>
+          <div class="tab-answer-text">Ab 01. März gilt: Wärmepumpen-Förderung steigt auf 70% für Gebäude vor 2000. Neu: Kombination mit KfW 261 jetzt möglich. Für Sanierungsprojekte besonders relevant — ich habe die wichtigsten Änderungen für dich zusammengefasst.</div>
+          <div class="tab-answer-meta">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M8 5v4l2 2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Antwort in 18 Sekunden · 4 Quellen durchsucht · bafa.de, bmwk.de
+          </div>
+        </div>
+      </div>
+      <div class="tab-right reveal reveal-delay-1">
+        <span class="t-label">Regulatorik-Monitoring</span>
+        <h3>Nie wieder selbst in Behördenportalen suchen.</h3>
+        <p>Gesetze, Förderungen, Ausschreibungen — dein Agent überwacht täglich alle für dich relevanten Quellen und fasst zusammen was sich geändert hat. Mit konkretem Bezug zu deinem Unternehmen.</p>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-tab="angebote">
+      <div class="tab-demo reveal">
+        <div class="tab-demo-header">Live-Demo · Dokument-Unterstützung</div>
+        <div class="tab-question-wrap">
+          <div class="tab-q-label">Deine Anfrage</div>
+          <div class="tab-question">"Schreib mir ein Angebot — Dachsanierung, ca. 180qm, Lieferung KW14, Premiumsegment."</div>
+        </div>
+        <div class="tab-answer-wrap">
+          <div class="tab-a-label">Agent-Antwort</div>
+          <div class="tab-answer-text">Angebot erstellt: Dachsanierung 180m², Lieferung KW14. Mit aktuellen Materialpreisen (Kupfer +3,2% diese Woche), deiner Marge von 28% und deiner Standard-Zahlungsbedingung 14 Tage netto. PDF-Export bereit.</div>
+          <div class="tab-answer-meta">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M8 5v4l2 2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Antwort in 22 Sekunden · Aktuelle Marktpreise eingerechnet
+          </div>
+        </div>
+      </div>
+      <div class="tab-right reveal reveal-delay-1">
+        <span class="t-label">Dokument-Unterstützung</span>
+        <h3>Mit deiner Tonalität und aktuellen Preisen.</h3>
+        <p>Der Agent kennt deine Preisstruktur, deine Konditionen und deinen Stil. Er erstellt Dokumente so wie du — nur schneller und mit tagesaktuellen Zahlen.</p>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-tab="wettbewerb">
+      <div class="tab-demo reveal">
+        <div class="tab-demo-header">Live-Demo · Wettbewerbs-Monitoring</div>
+        <div class="tab-question-wrap">
+          <div class="tab-q-label">Automatisches Alert</div>
+          <div class="tab-question">"Dein stärkster Wettbewerber hat diese Woche eine neue Leistung angekündigt."</div>
+        </div>
+        <div class="tab-answer-wrap">
+          <div class="tab-a-label">Agent-Alert</div>
+          <div class="tab-answer-text">Müller & Söhne hat eine neue Wartungsflat lanciert: 59€/Monat, inkl. Jahresinspektion. Aktuell auf LinkedIn stark beworben. Einschätzung: Preiskampf-Risiko mittel — deine Premium-Positionierung ist davon kaum betroffen.</div>
+          <div class="tab-answer-meta">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M8 5v4l2 2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Alert automatisch gesendet · Montag, 07:30 Uhr
+          </div>
+        </div>
+      </div>
+      <div class="tab-right reveal reveal-delay-1">
+        <span class="t-label">Wettbewerbs-Monitoring</span>
+        <h3>Überraschungen bleiben aus.</h3>
+        <p>Dein Agent beobachtet Wettbewerber kontinuierlich — Websites, Social Media, Pressemitteilungen. Du wirst informiert bevor deine Kunden es dir erzählen.</p>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-tab="briefing">
+      <div class="tab-demo reveal">
+        <div class="tab-demo-header">Live-Demo · Automatisches Briefing</div>
+        <div class="tab-question-wrap">
+          <div class="tab-q-label">Automatisch · Jeden Montag</div>
+          <div class="tab-question">"Dein Wochenbriefing ist bereit — 5 Minuten lesen, informiert in die Woche starten."</div>
+        </div>
+        <div class="tab-answer-wrap">
+          <div class="tab-a-label">Briefing-Auszug</div>
+          <div class="tab-answer-text">📊 Markt: Kupfer +2,1% | ⚖️ Regulatorik: GEG-Novelle zweite Lesung Bundestag | 🏆 Wettbewerb: Konkurrenz A jetzt mit Finanzierungspartnern | 📅 Diese Woche: 3 Angebote laufen am Freitag ab</div>
+          <div class="tab-answer-meta">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M8 5v4l2 2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Automatisch · Keine Aktion nötig · Täglich oder wöchentlich
+          </div>
+        </div>
+      </div>
+      <div class="tab-right reveal reveal-delay-1">
+        <span class="t-label">Proaktives Briefing</span>
+        <h3>Jede Woche informiert. Nie wieder orientierungslos.</h3>
+        <p>Täglich oder wöchentlich — dein Agent fasst alles zusammen, bevor dein Tag beginnt. Markt, Wettbewerb, Regulatorik, offene Termine. Was du brauchst. Kein Rauschen.</p>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-tab="bilder">
+      <div class="tab-demo reveal">
+        <div class="tab-demo-header">Live-Demo · Visuelle Outputs</div>
+        <div class="tab-question-wrap">
+          <div class="tab-q-label">Deine Anfrage</div>
+          <div class="tab-question">"Mach mir eine Vorher/Nachher-Skizze für Badsanierung — Walk-in Dusche rein, Wanne raus, gleiche Fläche."</div>
+        </div>
+        <div class="tab-answer-wrap">
+          <div class="tab-a-label">Agent-Output</div>
+          <div class="tab-answer-text">Fertig. Dusche verlegt, Wanne raus, Platz optimiert. Skizze als PDF + PNG exportierbar.</div>
+          <div class="sketch-compare">
+            <div>
+              <div class="sketch-label">Vorher</div>
+              <div class="sketch-room">
+                <div class="sketch-item" style="left:4%;top:8%;width:28%;height:26%;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3)">WC</div>
+                <div class="sketch-item" style="left:34%;top:8%;width:30%;height:26%;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3)">Waschb.</div>
+                <div class="sketch-item" style="left:4%;top:40%;width:88%;height:52%;background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.2)">Wanne</div>
+              </div>
+            </div>
+            <div class="sketch-arrow">→</div>
+            <div>
+              <div class="sketch-label" style="color:rgba(201,68,10,0.7)">Nachher</div>
+              <div class="sketch-room" style="border-color:rgba(201,68,10,0.22)">
+                <div class="sketch-item" style="left:4%;top:8%;width:52%;height:84%;background:rgba(201,68,10,0.09);border-color:rgba(201,68,10,0.28);color:rgba(201,68,10,0.65)">Dusche</div>
+                <div class="sketch-item" style="left:60%;top:8%;width:32%;height:28%;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.3)">WC</div>
+                <div class="sketch-item" style="left:60%;top:43%;width:32%;height:40%;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.25)">Waschb.</div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-answer-meta">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M8 5v4l2 2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Generiert in 9 Sekunden · PDF + PNG exportierbar
+          </div>
+        </div>
+      </div>
+      <div class="tab-right reveal reveal-delay-1">
+        <span class="t-label">Visuelle Outputs</span>
+        <h3>Vorher/Nachher auf Knopfdruck.</h3>
+        <p>Dein Agent kennt deine Projekte und Kunden. Er erstellt sofort verständliche Skizzen für Angebote, Kundengespräche oder Bauunterlagen — für Handwerker, Planer und alles dazwischen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Trust ─────────────────────────────────────── -->
+<section class="section" id="trust">
+  <div class="container">
+    <p class="t-label reveal" style="margin-bottom:14px">Warum quanture8</p>
+    <h2 class="t-display trust-headline reveal reveal-delay-1">Wir bauen.<br>Du nutzt.</h2>
+    <p class="trust-sub reveal reveal-delay-2">Kein IT-Projekt, kein Prompt-Engineering, kein interner Aufwand. Wir übernehmen alles — vom ersten Tag an.</p>
+    <div class="trust-grid">
+      <div class="trust-card reveal reveal-delay-1">
+        <div class="trust-card-icon">🛠️</div>
+        <h3>Kein Prompt-Engineering</h3>
+        <p>Wir bauen, konfigurieren und pflegen deinen Agenten. Du nutzt ihn — ohne Anleitung, ohne Vorkenntnisse.</p>
+      </div>
+      <div class="trust-card reveal reveal-delay-2">
+        <div class="trust-card-icon">🔑</div>
+        <h3>Dein Agent, dein Eigentum</h3>
+        <p>Nach dem Setup gehört der Agent vollständig dir. Kein Lock-in, keine Abhängigkeit — du kannst jederzeit wechseln oder übernehmen.</p>
+      </div>
+      <div class="trust-card reveal reveal-delay-3">
+        <div class="trust-card-icon">📈</div>
+        <h3>Wird besser mit dir</h3>
+        <p>Quartalsweise Überarbeitungen inklusive — der Agent bleibt immer aktuell und wird mit deinem Unternehmen präziser.</p>
+      </div>
+      <div class="trust-card reveal reveal-delay-4">
+        <div class="trust-card-icon">📚</div>
+        <h3>Quellenbelegt</h3>
+        <p>Jede externe Aussage ist mit Quelle versehen. Was der Agent nicht weiß, sagt er — keine Halluzinationen als Fakten.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Packages ──────────────────────────────────── -->
+<section class="section" id="pakete">
+  <div class="container">
+    <div class="packages-header reveal">
+      <p class="t-label" style="margin-bottom:14px">Pakete</p>
+      <h2 class="t-display">Drei Pakete.<br>Eines passt zu dir.</h2>
+      <p style="margin-top:12px;color:var(--ink-soft)">Alle Pakete starten mit einem persönlichen Gespräch — wir zeigen dir live, was dein Agent schon über deine Branche weiß.</p>
+    </div>
+    <div class="packages-grid">
+      <div class="pkg-card reveal reveal-delay-1">
+        <div class="pkg-badge">Agent Start</div>
+        <div class="pkg-name">Start</div>
+        <div class="pkg-desc">Dein Einstieg. Ein Agent, der dein Unternehmen kennt — mit sofortiger, spürbarer Wirkung.</div>
+        <ul class="pkg-features">
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Wöchentliches Briefing</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> On-Demand Chat (20 Anfragen/Mo)</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> 3 Monitoring-Themen</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Basis-Unternehmenskontext</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> E-Mail Delivery</li>
+        </ul>
+        <a href="mailto:hello@quanture8.de?subject=Agent%20Start" class="pkg-cta">Paket besprechen →</a>
+      </div>
+
+      <div class="pkg-card featured reveal reveal-delay-2">
+        <div class="pkg-badge">Empfohlen</div>
+        <div class="pkg-name">Pro</div>
+        <div class="pkg-desc">Für Unternehmen, die täglich fundiert entscheiden — und nie wieder unvorbereitet ins Gespräch gehen.</div>
+        <ul class="pkg-features">
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Tägliches Briefing</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Unlimitierter On-Demand Chat</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> 7 Monitoring-Themen + Alerts</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Tiefer Unternehmenskontext</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Monatlicher Strategiebericht</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Quartalsweises Review-Gespräch</li>
+        </ul>
+        <a href="mailto:hello@quanture8.de?subject=Agent%20Pro" class="pkg-cta">Paket besprechen →</a>
+      </div>
+
+      <div class="pkg-card reveal reveal-delay-3">
+        <div class="pkg-badge">Agent Elite</div>
+        <div class="pkg-name">Elite</div>
+        <div class="pkg-desc">Kein Standard. Für Unternehmen, die einen Agenten nach ihren Regeln brauchen.</div>
+        <ul class="pkg-features">
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Vollständig custom</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> 15+ Monitoring-Themen</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Slack / Teams Integration</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Tiefe System-Integrationen</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Quartals-Strategie-Call</li>
+          <li class="pkg-feature"><span class="pkg-check">✓</span> Dedizierte Infrastruktur</li>
+        </ul>
+        <a href="mailto:hello@quanture8.de?subject=Agent%20Elite" class="pkg-cta">Paket besprechen →</a>
+      </div>
+    </div>
+    <p class="packages-footnote reveal">Keine Listenpreise — weil jeder Agent individuell gebaut wird. Den passenden Preis besprechen wir gemeinsam.</p>
+  </div>
+</section>
+
+<!-- ─── Stats ─────────────────────────────────────── -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="reveal">
+        <div class="t-stat stat-num">3h</div>
+        <div class="stat-label"><strong>pro Woche gespart</strong><span>Weniger Recherche ab Tag 1</span></div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="t-stat stat-num">30s</div>
+        <div class="stat-label"><strong>bis zur Antwort</strong><span>Statt 30 Minuten Googlen</span></div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="t-stat stat-num">100%</div>
+        <div class="stat-label"><strong>Unternehmenskontext</strong><span>Kein Prompt-Frust mehr</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact Form ───────────────────────────────── -->
+<section class="section form-section" id="kontakt">
+  <div class="container">
+    <div class="form-wrap">
+      <div class="form-left">
+        <p class="t-label reveal" style="margin-bottom:14px">Kostenloses Gespräch</p>
+        <h2 class="t-display form-headline reveal reveal-delay-1">Bereit für deinen<br><em>eigenen Agenten?</em></h2>
+        <p class="form-lead reveal reveal-delay-2">30 Minuten. Kein Pitch — wir zeigen dir live, was dein Agent schon über deine Branche weiß. Du musst nichts vorbereiten.</p>
+        <ul class="form-bullets reveal reveal-delay-3">
+          <li>Kostenlos und unverbindlich</li>
+          <li>Antwort in unter 24h</li>
+          <li>Wir bereiten uns auf deine Branche vor</li>
+        </ul>
+      </div>
+      <div class="form-right reveal reveal-delay-2">
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cf-name">Name</label>
+              <input class="form-input" type="text" id="cf-name" name="name" placeholder="Max Mustermann" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-company">Unternehmen</label>
+              <input class="form-input" type="text" id="cf-company" name="company" placeholder="Muster GmbH" required autocomplete="organization">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-email">E-Mail</label>
+            <input class="form-input" type="email" id="cf-email" name="email" placeholder="max@muster.de" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-message">Was beschäftigt dich? <span class="form-label-opt">(optional)</span></label>
+            <textarea class="form-input form-textarea" id="cf-message" name="message" placeholder="Kurz beschreiben was du gerade brauchst — wir bereiten uns darauf vor." rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn-primary form-submit" id="cfSubmit">
+            Gespräch anfragen
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <p class="form-hint">Antwort in der Regel innerhalb von 24 Stunden</p>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">✓</div>
+          <h3>Anfrage erhalten.</h3>
+          <p>Wir melden uns innerhalb von 24h. Wir bereiten uns auf deine Branche vor — damit das Gespräch sofort Substanz hat.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">quanture<span>8</span></div>
+      <div class="footer-links">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+      </div>
+      <div class="footer-copy">© 2026 quanture8</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+});
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const pane = document.querySelector(`.tab-pane[data-tab="${tab}"]`);
+    pane.classList.add('active');
+    pane.querySelectorAll('.reveal').forEach(el => {
+      el.classList.remove('visible');
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+    });
+  });
+});
+
+(function() {
+  const c = document.getElementById('chatMessages');
+  if (!c) return;
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const stick = () => { c.scrollTop = c.scrollHeight; };
+
+  function typeText(el, text, charDelay = 22) {
+    return new Promise(resolve => {
+      let i = 0;
+      let last = performance.now();
+      function frame(now) {
+        while (now - last >= charDelay && i < text.length) {
+          i++;
+          el.textContent = text.slice(0, i);
+          last += charDelay;
+        }
+        if (i < text.length) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function makeMsg(isUser) {
+    const d = document.createElement('div');
+    d.className = 'chat-msg' + (isUser ? ' user' : '');
+    const av = document.createElement('div');
+    av.className = 'chat-avatar ' + (isUser ? 'user' : 'agent');
+    av.textContent = isUser ? 'Du' : 'Q8';
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble';
+    d.appendChild(av);
+    d.appendChild(bubble);
+    return { el: d, bubble };
+  }
+
+  async function appear(el) {
+    c.appendChild(el);
+    stick();
+    requestAnimationFrame(() => el.classList.add('show'));
+    await wait(300);
+  }
+
+  async function userTurn(text) {
+    const { el, bubble } = makeMsg(true);
+    bubble.textContent = text;
+    await appear(el);
+    await wait(800);
+  }
+
+  async function agentTurn(statusText, insights, sources, intro = null, followUp = null, typingDelay = 600) {
+    const { el, bubble } = makeMsg(false);
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-typing';
+    typingDiv.innerHTML = '<span></span><span></span><span></span>';
+    bubble.appendChild(typingDiv);
+    await appear(el);
+    await wait(typingDelay);
+
+    typingDiv.style.transition = 'opacity 0.2s ease';
+    typingDiv.style.opacity = '0';
+    await wait(220);
+    typingDiv.remove();
+
+    const statusEl = document.createElement('div');
+    statusEl.className = 'chat-status-line anim-in';
+    statusEl.textContent = statusText;
+    bubble.appendChild(statusEl);
+
+    if (intro) {
+      await wait(400);
+      const introEl = document.createElement('div');
+      introEl.className = 'anim-in';
+      introEl.style.cssText = 'font-size:0.84rem;line-height:1.5;margin:6px 0 4px';
+      introEl.textContent = intro;
+      bubble.appendChild(introEl);
+    }
+
+    await wait(450);
+    stick();
+
+    const insWrap = document.createElement('div');
+    insWrap.className = 'chat-insights';
+    bubble.appendChild(insWrap);
+
+    for (const [cls, text] of insights) {
+      const ins = document.createElement('div');
+      ins.className = 'chat-insight ' + cls + ' anim-in';
+      insWrap.appendChild(ins);
+      await typeText(ins, text);
+      stick();
+      await wait(260);
+    }
+
+    await wait(300);
+    const srcWrap = document.createElement('div');
+    srcWrap.className = 'chat-sources anim-in';
+    srcWrap.innerHTML = sources.map(s => `<span class="chat-source-pill">${s}</span>`).join('');
+    bubble.appendChild(srcWrap);
+    await wait(420);
+    stick();
+
+    if (followUp) {
+      await wait(280);
+      const fuEl = document.createElement('div');
+      fuEl.className = 'anim-in';
+      fuEl.style.cssText = 'font-size:0.82rem;line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.07);color:var(--ink-soft)';
+      fuEl.textContent = followUp;
+      bubble.appendChild(fuEl);
+      await wait(380);
+      stick();
+    }
+  }
+
+  async function loop() {
+    await agentTurn(
+      'Branchen-Update · gerade eben',
+      [
+        ['up',   'Nachfrage in deiner Branche +14% — stärkste Woche seit Oktober'],
+        ['warn', 'Dein Hauptkonkurrent hat gestern die Preise erhöht'],
+        ['cta',  'Guter Zeitpunkt für aktive Akquise — Markt ist gerade offen'],
+      ],
+      ['branchenmonitor.de', 'google.de'],
+      'Ich hab deinen Markt heute Morgen gescannt — hier das Wichtigste:'
+    );
+
+    await wait(1000);
+
+    await userTurn('Was hat der Konkurrent genau gemacht?');
+
+    await agentTurn(
+      'Wettbewerber-Scan · 7 Sek. · 4 Quellen',
+      [
+        ['warn', 'Website-Relaunch vor 11 Tagen — Einstiegspreise deutlich erhöht'],
+        ['warn', '3 offene Sales-Stellen seit 14. Feb. auf LinkedIn — skaliert Vertrieb stark'],
+        ['up',   'Google letzter Monat: Ø 3,1 ★ — häufigste Kritik: langsam, schwer erreichbar'],
+      ],
+      ['konkurrent.de', 'linkedin.com', 'google.de', 'trustpilot.de'],
+      'Dein Hauptkonkurrent ist gerade sehr aktiv — hier was ich gefunden habe:',
+      'Soll ich dir einen Kommunikationsplan ausarbeiten, der genau das nutzt?'
+    );
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      obs.disconnect();
+      try { loop(); } catch(e) { console.error(e); }
+    }
+  }, { threshold: 0.3 });
+  const hv = document.querySelector('.hero-visual');
+  if (hv) obs.observe(hv);
+})();
+
+const hamburger = document.getElementById('navHamburger');
+if (hamburger) {
+  hamburger.addEventListener('click', () => {
+    nav.classList.toggle('nav--open');
+    hamburger.setAttribute('aria-label', nav.classList.contains('nav--open') ? 'Menü schließen' : 'Menü öffnen');
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => nav.classList.remove('nav--open'));
+  });
+  document.addEventListener('click', e => {
+    if (!nav.contains(e.target)) nav.classList.remove('nav--open');
+  });
+}
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = document.getElementById('cfSubmit');
+    const name = contactForm.querySelector('[name="name"]').value.trim();
+    const company = contactForm.querySelector('[name="company"]').value.trim();
+    const email = contactForm.querySelector('[name="email"]').value.trim();
+    const message = contactForm.querySelector('[name="message"]').value.trim();
+    if (!name || !company || !email) return;
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet…';
+    const subject = encodeURIComponent(`Anfrage: ${name} — ${company}`);
+    const body = encodeURIComponent(`Name: ${name}\nUnternehmen: ${company}\nE-Mail: ${email}\n\nNachricht:\n${message || '—'}`);
+    const a = document.createElement('a');
+    a.href = `mailto:hello@quanture8.de?subject=${subject}&body=${body}`;
+    a.click();
+    contactForm.style.display = 'none';
+    const success = document.getElementById('formSuccess');
+    success.style.display = 'flex';
+  });
+}
+</script>
+</body>
+</html>

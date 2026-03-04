@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datenschutzerklärung — quanture8</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --bg-card: #FFFFFF;
+  --ink: #0E1520;
+  --ink-soft: #4A5568;
+  --ink-muted: #9AA5B4;
+  --accent: #C9440A;
+  --border: #E4DED4;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --radius: 6px;
+  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(247,245,240,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+}
+.nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-style: italic; }
+.nav-logo span { color: var(--accent); }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.875rem; font-weight: 500; color: var(--ink-soft);
+  transition: color var(--transition);
+}
+.nav-back:hover { color: var(--ink); }
+
+.page-wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 96px; }
+.page-label {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-muted); margin-bottom: 16px;
+}
+.page-title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.1;
+  margin-bottom: 56px;
+}
+
+/* ── Styling für it-recht-kanzlei HTML-Snippets ── */
+.legal-content h1 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.6rem; margin: 40px 0 12px; line-height: 1.2;
+}
+.legal-content h2 {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-muted);
+  margin: 36px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.legal-content h3 {
+  font-size: 0.95rem; font-weight: 700;
+  margin: 24px 0 8px;
+}
+.legal-content h4 {
+  font-size: 0.88rem; font-weight: 600;
+  color: var(--ink-soft); margin: 18px 0 6px;
+}
+.legal-content p {
+  font-size: 0.95rem; color: var(--ink-soft);
+  line-height: 1.8; margin-bottom: 14px;
+}
+.legal-content ul, .legal-content ol {
+  padding-left: 20px; margin-bottom: 14px;
+}
+.legal-content li {
+  font-size: 0.95rem; color: var(--ink-soft);
+  line-height: 1.75; margin-bottom: 6px;
+}
+.legal-content strong { color: var(--ink); font-weight: 600; }
+.legal-content em { font-style: italic; }
+.legal-content a {
+  color: var(--ink); text-decoration: underline;
+  text-underline-offset: 3px; transition: color var(--transition);
+}
+.legal-content a:hover { color: var(--accent); }
+.legal-content table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.875rem; margin-bottom: 20px;
+}
+.legal-content th {
+  text-align: left; padding: 10px 14px;
+  background: rgba(14,21,32,0.04);
+  font-weight: 600; font-size: 0.78rem;
+  border-bottom: 1px solid var(--border);
+}
+.legal-content td {
+  padding: 10px 14px; color: var(--ink-soft);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+footer { border-top: 1px solid var(--border); padding: 28px 0; }
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+}
+.footer-logo { font-family: var(--font-display); font-style: italic; font-size: 1rem; }
+.footer-logo span { color: var(--accent); }
+.footer-links { display: flex; gap: 24px; font-size: 0.8rem; color: var(--ink-muted); }
+.footer-links a:hover { color: var(--ink); }
+.footer-copy { font-size: 0.8rem; color: var(--ink-muted); }
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+  .page-wrap { padding: 48px 20px 72px; }
+  .legal-content table { font-size: 0.8rem; }
+  .legal-content th, .legal-content td { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">quanture<span>8</span></a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3m5 5L3 8l5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Zurück
+    </a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <p class="page-label">Rechtliches</p>
+  <h1 class="page-title">Datenschutzerklärung</h1>
+
+  <div class="legal-content">
+    <!-- IT-RECHT KANZLEI SNIPPET HIER EINFÜGEN -->
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">quanture<span>8</span></div>
+    <div class="footer-links">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </div>
+    <div class="footer-copy">© 2026 quanture8</div>
+  </div>
+</footer>
+
+</body>
+</html>

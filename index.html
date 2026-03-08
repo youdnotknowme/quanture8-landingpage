@@ -153,21 +153,16 @@ button { font-family: var(--font-body); cursor: pointer; border: none; backgroun
 }
 .hero-headline.visible em::after { width: 100%; }
 .hero-sub { font-size: 1.05rem; color: var(--ink-soft); line-height: 1.75; max-width: 460px; margin-bottom: 28px; }
-.hero-trust {
-  display: flex; flex-direction: column; gap: 0;
-  margin-bottom: 32px;
-  border: 1px solid var(--border); border-radius: var(--radius-lg);
-  overflow: hidden;
+.hero-stats {
+  display: flex; align-items: center;
+  margin-top: 56px; padding-top: 44px;
+  border-top: 1px solid var(--border);
+  position: relative; z-index: 1;
 }
-.hero-trust-item {
-  display: flex; align-items: flex-start; gap: 13px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.hero-trust-item:last-child { border-bottom: none; }
-.hero-trust-icon { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
-.hero-trust-text strong { display: block; font-size: 0.84rem; font-weight: 700; margin-bottom: 2px; }
-.hero-trust-text span { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.45; }
+.hero-stat { flex: 1; text-align: center; padding: 0 16px; }
+.hero-stat-sep { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+.hero-stat-num { font-family: var(--font-stat); font-size: clamp(2rem, 3.2vw, 2.8rem); color: var(--ink); line-height: 1; margin-bottom: 5px; }
+.hero-stat-label { font-size: 0.78rem; color: var(--ink-soft); }
 .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
@@ -504,12 +499,14 @@ button { font-family: var(--font-body); cursor: pointer; border: none; backgroun
   font-size: 0.82rem; color: var(--ink-muted);
 }
 
-/* ─── Stats ──────────────────────────────────────── */
-.stats { background: var(--accent); padding: 80px 0; }
-.stats-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
-.stat-num { font-family: var(--font-stat); font-size: clamp(3.5rem, 6vw, 5.5rem); line-height: 1; color: #fff; margin-bottom: 10px; }
-.stat-label strong { display: block; color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
-.stat-label span { color: rgba(255,255,255,0.72); font-size: 0.875rem; }
+/* ─── Trust Bar ──────────────────────────────────── */
+.trust-bar { background: var(--accent); padding: 44px 0; }
+.trust-bar-inner { display: grid; grid-template-columns: repeat(3, 1fr); }
+.trust-bar-item { display: flex; align-items: flex-start; gap: 14px; padding: 0 32px; border-right: 1px solid rgba(255,255,255,0.18); }
+.trust-bar-item:last-child { border-right: none; }
+.trust-bar-icon { color: #fff; flex-shrink: 0; margin-top: 2px; opacity: 0.9; }
+.trust-bar-text strong { display: block; font-size: 0.875rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.trust-bar-text span { font-size: 0.78rem; color: rgba(255,255,255,0.72); line-height: 1.5; }
 
 /* ─── Final CTA ──────────────────────────────────── */
 .final-cta { padding: 100px 0; text-align: center; }
@@ -547,7 +544,11 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
   .trust-wrap { grid-template-columns: 1fr; gap: 40px; }
   .trust-left { position: static; }
   .packages-grid { grid-template-columns: 1fr; }
-  .stats-inner { grid-template-columns: 1fr; gap: 32px; }
+  .trust-bar-inner { grid-template-columns: 1fr; }
+  .trust-bar-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.18); padding: 16px 0; }
+  .trust-bar-item:last-child { border-bottom: none; }
+  .hero-stats { flex-direction: column; gap: 20px; }
+  .hero-stat-sep { width: 40px; height: 1px; }
   .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
 }
 @media (max-width: 640px) {
@@ -769,37 +770,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
           Wir bauen KI-Agenten, die dein Unternehmen kennen — und täglich das liefern, was kein Standard-Tool kann.
         </p>
 
-        <div class="hero-trust reveal reveal-delay-2">
-          <div class="hero-trust-item">
-            <div class="hero-trust-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1z"/></svg>
-            </div>
-            <div class="hero-trust-text">
-              <strong>Keine sensiblen Daten nötig</strong>
-              <span>Unsere Agenten brauchen keine Kundendaten oder internen Systeme — volle Leistung ohne Datenschutzrisiko.</span>
-            </div>
-          </div>
-          <div class="hero-trust-item">
-            <div class="hero-trust-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <div class="hero-trust-text">
-              <strong>Tägliches Monitoring, klare Insights</strong>
-              <span>Markt, Wettbewerb und Trends werden automatisch gescannt — täglich fundierte Insights, direkt verwertbar.</span>
-            </div>
-          </div>
-          <div class="hero-trust-item">
-            <div class="hero-trust-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="hero-trust-text">
-              <strong>Individuell trainiert, lernfähig</strong>
-              <span>Dein Agent kennt deine Branche und dein Unternehmen — und wird mit jeder Woche präziser.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-actions reveal reveal-delay-3">
+        <div class="hero-actions reveal reveal-delay-2">
           <a href="mailto:hello@quanture8.de" class="btn-primary">
             Gespräch vereinbaren
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -825,6 +796,23 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
           </div>
           <div class="chat-messages" id="chatMessages"></div>
         </div>
+      </div>
+    </div>
+
+    <div class="hero-stats reveal reveal-delay-3">
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="3" data-suffix="h">3h</div>
+        <div class="hero-stat-label">pro Woche gespart</div>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="30" data-suffix="s">30s</div>
+        <div class="hero-stat-label">bis zur Antwort</div>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="100" data-suffix="%">100%</div>
+        <div class="hero-stat-label">Unternehmenskontext</div>
       </div>
     </div>
   </div>
@@ -1133,21 +1121,36 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
   </div>
 </section>
 
-<!-- ─── Stats ─────────────────────────────────────── -->
-<section class="stats">
+<!-- ─── Trust Bar ────────────────────────────────── -->
+<section class="trust-bar">
   <div class="container">
-    <div class="stats-inner">
-      <div class="reveal">
-        <div class="t-stat stat-num" data-count="3" data-suffix="h">3h</div>
-        <div class="stat-label"><strong>pro Woche gespart</strong><span>Weniger Recherche ab Tag 1</span></div>
+    <div class="trust-bar-inner">
+      <div class="trust-bar-item reveal">
+        <div class="trust-bar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1z"/></svg>
+        </div>
+        <div class="trust-bar-text">
+          <strong>Keine sensiblen Daten nötig</strong>
+          <span>Volle Leistung ohne Kundendaten oder interne Systeme.</span>
+        </div>
       </div>
-      <div class="reveal reveal-delay-1">
-        <div class="t-stat stat-num" data-count="30" data-suffix="s">30s</div>
-        <div class="stat-label"><strong>bis zur Antwort</strong><span>Statt 30 Minuten Googlen</span></div>
+      <div class="trust-bar-item reveal reveal-delay-1">
+        <div class="trust-bar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="trust-bar-text">
+          <strong>Tägliches Monitoring, klare Insights</strong>
+          <span>Markt, Wettbewerb und Trends automatisch gescannt.</span>
+        </div>
       </div>
-      <div class="reveal reveal-delay-2">
-        <div class="t-stat stat-num" data-count="100" data-suffix="%">100%</div>
-        <div class="stat-label"><strong>Unternehmenskontext</strong><span>Kein Prompt-Frust mehr</span></div>
+      <div class="trust-bar-item reveal reveal-delay-2">
+        <div class="trust-bar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="trust-bar-text">
+          <strong>Individuell trainiert, lernfähig</strong>
+          <span>Kennt deine Branche und wird mit jeder Woche präziser.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1422,7 +1425,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   const obs = new IntersectionObserver(entries => {
     if (!entries[0].isIntersecting) return;
     obs.disconnect();
-    document.querySelectorAll('.stat-num[data-count]').forEach(el => {
+    document.querySelectorAll('.hero-stat-num[data-count]').forEach(el => {
       const target = +el.dataset.count;
       const suffix = el.dataset.suffix || '';
       const duration = 1400;
@@ -1433,8 +1436,8 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
         if (t < 1) requestAnimationFrame(tick);
       })(start);
     });
-  }, { threshold: 0.5 });
-  const s = document.querySelector('.stats');
+  }, { threshold: 0.3 });
+  const s = document.querySelector('.hero-stats');
   if (s) obs.observe(s);
 })();
 

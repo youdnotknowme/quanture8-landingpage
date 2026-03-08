@@ -126,22 +126,20 @@ button { font-family: var(--font-body); cursor: pointer; border: none; backgroun
 .hero-headline em { font-style: italic; color: var(--accent); }
 .hero-sub { font-size: 1.05rem; color: var(--ink-soft); line-height: 1.75; max-width: 460px; margin-bottom: 28px; }
 .hero-trust {
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex; flex-direction: column; gap: 0;
   margin-bottom: 32px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden;
 }
-.hero-trust-item { display: flex; align-items: flex-start; gap: 11px; cursor: pointer; user-select: none; }
-.hero-trust-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
-.hero-trust-header { display: flex; align-items: center; gap: 6px; }
-.hero-trust-text strong { font-size: 0.875rem; font-weight: 700; }
-.hero-trust-chevron { color: var(--ink-muted); flex-shrink: 0; transition: transform 0.22s ease; }
-.hero-trust-item.open .hero-trust-chevron { transform: rotate(180deg); }
-.hero-trust-desc {
-  max-height: 0; overflow: hidden; opacity: 0;
-  font-size: 0.8rem; color: var(--ink-soft); line-height: 1.5;
-  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
-  margin-top: 0;
+.hero-trust-item {
+  display: flex; align-items: flex-start; gap: 13px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
 }
-.hero-trust-item.open .hero-trust-desc { max-height: 80px; opacity: 1; margin-top: 4px; }
+.hero-trust-item:last-child { border-bottom: none; }
+.hero-trust-icon { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.hero-trust-text strong { display: block; font-size: 0.84rem; font-weight: 700; margin-bottom: 2px; }
+.hero-trust-text span { font-size: 0.78rem; color: var(--ink-soft); line-height: 1.45; }
 .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
@@ -749,11 +747,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1z"/></svg>
             </div>
             <div class="hero-trust-text">
-              <div class="hero-trust-header">
-                <strong>Keine sensiblen Daten nötig</strong>
-                <svg class="hero-trust-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-              <div class="hero-trust-desc">Unsere Agenten brauchen keine Kundendaten oder internen Systeme — volle Leistung ohne Datenschutzrisiko.</div>
+              <strong>Keine sensiblen Daten nötig</strong>
+              <span>Unsere Agenten brauchen keine Kundendaten oder internen Systeme — volle Leistung ohne Datenschutzrisiko.</span>
             </div>
           </div>
           <div class="hero-trust-item">
@@ -761,11 +756,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
             <div class="hero-trust-text">
-              <div class="hero-trust-header">
-                <strong>Tägliches Monitoring, klare Insights</strong>
-                <svg class="hero-trust-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-              <div class="hero-trust-desc">Markt, Wettbewerb und Trends werden automatisch gescannt — du bekommst täglich fundierte Insights, direkt verwertbar.</div>
+              <strong>Tägliches Monitoring, klare Insights</strong>
+              <span>Markt, Wettbewerb und Trends werden automatisch gescannt — täglich fundierte Insights, direkt verwertbar.</span>
             </div>
           </div>
           <div class="hero-trust-item">
@@ -773,11 +765,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; }
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
             <div class="hero-trust-text">
-              <div class="hero-trust-header">
-                <strong>Individuell trainiert, lernfähig</strong>
-                <svg class="hero-trust-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-              <div class="hero-trust-desc">Dein Agent kennt deine Branche und dein Unternehmen — und wird mit jeder Woche präziser.</div>
+              <strong>Individuell trainiert, lernfähig</strong>
+              <span>Dein Agent kennt deine Branche und dein Unternehmen — und wird mit jeder Woche präziser.</span>
             </div>
           </div>
         </div>
@@ -1391,8 +1380,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     await wait(1200);
     await userTurn('Erstell mir eine Zusammenfassung für das Team-Meeting.');
     await agentSimple('Wird gemacht — ich bereite die Analyse auf und schicke sie dir zu, sobald sie fertig ist. 📄');
-    await wait(4000);
-    loop();
   }
 
   const obs = new IntersectionObserver(entries => {
@@ -1401,10 +1388,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   const hv = document.querySelector('.hero-visual');
   if (hv) obs.observe(hv);
 })();
-
-document.querySelectorAll('.hero-trust-item').forEach(item => {
-  item.addEventListener('click', () => item.classList.toggle('open'));
-});
 
 const hamburger = document.getElementById('navHamburger');
 if (hamburger) {
